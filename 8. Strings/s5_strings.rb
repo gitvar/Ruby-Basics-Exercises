@@ -1,0 +1,5 @@
+#
+
+greeting = 'Hello!'
+puts greeting.gsub!('Hello', 'Goodbye')
+# puts greeting
