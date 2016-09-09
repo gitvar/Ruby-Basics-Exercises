@@ -1,7 +1,7 @@
 # In the previous two exercises, you developed methods that convert simple numeric strings to signed Integers. In this exercise and the next, you're going to reverse those methods.
 
 # Write a method that takes a positive integer or zero, and converts it to a string representation.
-#
+
 # You may not use any of the standard conversion methods available in Ruby, such as `Integer#to_s`, `String()`, `Kernel#format`, etc. Your method should do this the old-fashioned way and construct the string by analyzing and manipulating the number.
 
 DIGITS = { 0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4',
@@ -9,29 +9,37 @@ DIGITS = { 0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4',
          }
 
 def integer_to_string(num)
-  arr = []
-  exp = 20  # Largest number to be converted is 21 digits in length
+  str = ''
+  # arr = []
+  # exp = 20  # Largest number to be converted is 21 digits in length
+
+  # Convert number to array of chars.
+  # loop do
+  #   quotient, num = num.divmod(10**exp)
+  #   arr << DIGITS[quotient]
+  #   exp -= 1
+  #   break if exp < 0
+  # end
 
   # Convert number to array of chars.
   loop do
-    denominator, remainder = num.divmod(10**exp)
-    arr << DIGITS[denominator]
-    num = remainder
-    exp -= 1
-    break if exp < 0
+    num, remainder = num.divmod(10)
+    str.prepend(DIGITS[remainder])
+    break if num == 0
   end
 
   # Remove leading zeros.
-  loop do
-    break unless arr.first == '0'
-    arr.shift
-  end
+  # loop do
+  #   break unless arr.first == '0'
+  #   arr.shift
+  # end
 
   # Add '0' if num == 0.
-  arr[0] = '0' if arr == []
+  # arr[0] = '0' if arr == []
 
   # Return a string.
-  arr.join
+  # arr.join
+  str
 end
 
 puts integer_to_string(4321) == '4321'
