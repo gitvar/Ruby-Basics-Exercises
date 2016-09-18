@@ -4,41 +4,17 @@
 
 # You may not use any of the standard conversion methods available in Ruby, such as `Integer#to_s`, `String()`, `Kernel#format`, etc. Your method should do this the old-fashioned way and construct the string by analyzing and manipulating the number.
 
-DIGITS = { 0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4',
-           5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9'
-         }
+DIGITS = %w(0 1 2 3 4 5 6 7 8 9)
 
 def integer_to_string(num)
   str = ''
-  # arr = []
-  # exp = 20  # Largest number to be converted is 21 digits in length
 
-  # Convert number to array of chars.
-  # loop do
-  #   quotient, num = num.divmod(10**exp)
-  #   arr << DIGITS[quotient]
-  #   exp -= 1
-  #   break if exp < 0
-  # end
-
-  # Convert number to array of chars.
   loop do
     num, remainder = num.divmod(10)
     str.prepend(DIGITS[remainder])
     break if num == 0
   end
 
-  # Remove leading zeros.
-  # loop do
-  #   break unless arr.first == '0'
-  #   arr.shift
-  # end
-
-  # Add '0' if num == 0.
-  # arr[0] = '0' if arr == []
-
-  # Return a string.
-  # arr.join
   str
 end
 
