@@ -37,3 +37,7 @@ puts
 puts '24:00'
 puts after_midnight('24:00') #== 0
 puts before_midnight('24:00') #== 0
+puts
+puts '23:59'
+puts after_midnight('23:59') #== 1439
+puts before_midnight('23:59') #== 1
