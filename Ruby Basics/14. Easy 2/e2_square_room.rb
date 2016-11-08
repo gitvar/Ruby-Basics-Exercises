@@ -6,6 +6,9 @@ METERS_TO_FEET = 10.7639
 
 def format_number(num)
   format('%4.2f', num)
+  # puts "He is %d (%3.2f in floating point terms) pounds heavy." % [weight, weight]
+  # str = "He is %d (%3.2f in floating point terms) pounds heavy and %d (%3.2f in floating point terms) feet in height." % [weight, weight, height, height]
+  # puts str
 end
 
 puts "Enter the length of the room in meters:"
