@@ -16,10 +16,17 @@
 #
 class Series
   def initialize(str)
-    @str = str
+    @arr = str.chars.map(&:to_i)
   end
 
-  def group_array_elements(array, no_of_elements)
+  def slices(no_of_elements)
+    raise ArgumentError, "argument out of range" if no_of_elements > @arr.length
+    build_slices(@arr, no_of_elements)
+  end
+
+  private
+
+  def build_slices(array, no_of_elements)
     result_array = []
     outer_index = 0
     loop do
@@ -30,18 +37,12 @@ class Series
         inner_index += 1
       end
       result_array << inner_array
-      outer_index += 1
       break if inner_index >= array.size
+      outer_index += 1
     end
     result_array
-  end
-
-  def slices(no_of_elements)
-    raise ArgumentError, "'no_of_elements'" if no_of_elements > @str.length
-    one_dimensional_array = @str.chars.map(&:to_i)
-    group_array_elements(one_dimensional_array, no_of_elements)
   end
 end
 
 # series = Series.new('01234')
-# p series.slices(4)
+# p series.slices(6)

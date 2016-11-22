@@ -19,7 +19,7 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 require 'minitest/autorun'
 require "minitest/reporters"
-require_relative 'e1_series'
+require_relative 'e1_3_series'
 Minitest::Reporters.use!
 
 class SeriesTest < Minitest::Test
