@@ -27,10 +27,16 @@
 # your program should return '?'.
 # 2. If the input is the incorrect size, your program should return an error.
 
-# My notes:
-# 1. Input is a 3 x 4 'grid'.
-# 2. Let's make it an Array of 4 strings, each string 3 characters in length and each element representing a row in the 'grid'.
-# For example:
+# NOTE: All the above is done with the individual numbers 0 to 9 recognized.
+
+# Step 2:
+# Update your program to recognize multi-character binary strings, replacing garbled numbers with ?
+#
+# Possible Solutions:
+# 1. Break strings up and build single 3 x 4 chars. Then match them up.
+# Questions:
+# a. How to recognize multi-char string?
+# b. How to break up a multi-char string correctly?
 
 module OCR_Strings
   ZERO = <<-NUMBER.chomp
@@ -110,35 +116,28 @@ class OCR
   OCR_ARRAY = [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE]
 
   def initialize(input_text)
-    @text = check(input_text)
+    @text = input_text
+    verify_input_size(@text)
     @hash = {}
-    initialize_hash
   end
 
   def convert
-    @hash.each do |key, value|
-      return key.to_s if @text.eql?(value)
+    OCR_ARRAY.each_with_index do |ocr, idx|
+      return idx.to_s if @text.eql?(ocr)
     end
-    return "?"
+    return '?'
   end
 
   private
 
-  def check(text)
-    text
-  end
-
-  def initialize_hash
-    (0..9).each do |x|
-      @hash[x] = OCR_ARRAY[x]
-    end
+  def verify_input_size(input_text)
+    raise ArgumentError, "Input text size is wrong!" unless input_text.split(//).count("\n") == 3
   end
 end
-#
-#
+
 # text = <<-NUMBER.chomp
 #  _
-# | |
+# |_|
 # |_|
 #
 # NUMBER
