@@ -1,42 +1,4 @@
 # ocr_numbers.rb
-#
-# OCR Numbers
-#
-# Write a program that, given a 3 x 4 grid of pipes, underscores, and spaces, can determine which number is represented, or whether it is garbled.
-#
-# Step One
-#
-# To begin with, convert a simple binary font to a string containing 0 or 1. The binary font uses pipes and underscores, four rows high and three columns wide.
-#
-#  _   #
-# | |  # zero.
-# |_|  #
-#      # the fourth row is always blank
-#
-# Is converted to "0"
-#
-#    #
-# |  # one.
-# |  #
-#    # (blank fourth row)
-#
-# Is converted to "1"
-#
-# Requirements/Specifications:
-# 1. If the input is the correct size, but not recognizable,
-# your program should return '?'.
-# 2. If the input is the incorrect size, your program should return an error.
-
-# NOTE: All the above is done with the individual numbers 0 to 9 recognized.
-
-# Step 2:
-# Update your program to recognize multi-character binary strings, replacing garbled numbers with ?
-#
-# Possible Solutions:
-# 1. Break strings up and build single 3 x 4 chars. Then match them up.
-# Questions:
-# a. How to recognize multi-char string?
-# b. How to break up a multi-char string correctly?
 
 module OCR_Strings
   ZERO = <<-NUMBER.chomp
@@ -116,30 +78,151 @@ class OCR
   OCR_ARRAY = [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE]
 
   def initialize(input_text)
+    verify_size(input_text)
     @text = input_text
-    verify_input_size(@text)
-    @hash = {}
+    @single_number = true
   end
 
   def convert
-    OCR_ARRAY.each_with_index do |ocr, idx|
-      return idx.to_s if @text.eql?(ocr)
+    if @text.size <= 11
+      read_single_number(@text)
+    else
+      @single_number = false
+      read_multiple_numbers
     end
-    return '?'
   end
 
   private
 
-  def verify_input_size(input_text)
-    raise ArgumentError, "Input text size is wrong!" unless input_text.split(//).count("\n") == 3
+  def verify_size(input_text)
+    raise ArgumentError, "Input text size is wrong!" unless input_text.split(//).count("\n") % 3 == 0
+  end
+
+  def strip_spaces(str)
+    arr = str.split(//)
+    puts "arr = #{arr}"
+    if str[0..2] == "   "
+      3.times { arr.shift }
+    end
+    if str[0..2] == " _ "
+      arr.delete_at(2)
+    end
+    arr.join
+  end
+
+  def read_single_number(str)
+    str = strip_spaces(str)
+    p "str = #{str}"
+    OCR_ARRAY.each_with_index do |ocr, idx|
+      p "ocr = #{ocr}"
+      # return idx.to_s if str.eql?(ocr)
+      if str.eql?(ocr)
+        p "ocr = #{ocr}"
+        p "str = #{str}"
+        return idx.to_s
+      end
+    end
+    '?'
+  end
+
+  def break_into_single_numbers
+    idx = 0
+    rows_hash = { 0 => [], 1 => [], 2 => [] }
+    numbers_hash = { 0 => [], 1 => []}
+
+    @text.split(//).each do |e|
+      rows_hash[idx] << " " if rows_hash[idx][-1] == "_" && e == "\n"
+      rows_hash[idx] << e unless e == "\n"
+      idx += 1 if e == "\n"
+    end
+
+    0.upto((rows_hash[0].size / 3) - 1) do |number|
+      arr = []
+      # puts "number = #{number}"
+      0.upto(2) do |row|
+        # puts "row = #{row}"
+        arr << rows_hash[row].slice!(0..2)
+        arr << "\n"
+        # p arr
+      end
+      numbers_hash[number] = arr.flatten
+    end
+    numbers_hash
+  end
+
+  def identify_each_number(numbers_hash)
+    numbers = numbers_hash.each_value.map do |v|
+      read_single_number(v.join)
+    end
+    numbers.join
+  end
+
+  def read_multiple_numbers
+    hash = break_into_single_numbers
+    identify_each_number(hash)
   end
 end
 
-# text = <<-NUMBER.chomp
+# zero = <<-NUMBER.chomp
 #  _
-# |_|
+# | |
 # |_|
 #
 # NUMBER
+# puts OCR.new(zero).convert
 #
-# puts OCR.new(text).convert
+# one = <<-NUMBER.chomp
+#
+#   |
+#   |
+#
+# NUMBER
+# puts OCR.new(one).convert
+#
+# text_5 = <<-NUMBER.chomp
+#  _
+# |_
+#  _|
+#
+# NUMBER
+# puts OCR.new(text_5).convert
+#
+# text_10 = <<-NUMBER.chomp
+#     _
+#   || |
+#   ||_|
+#
+# NUMBER
+# puts OCR.new(text_10).convert
+#
+# text_9 = <<-NUMBER.chomp
+#  _
+# |_|
+#  _|
+#
+# NUMBER
+# puts OCR.new(text_9).convert
+#
+# big_num = <<-NUMBER.chomp
+#     _  _     _  _  _  _  _  _
+#   | _| _||_||_ |_   ||_||_|| |
+#   ||_  _|  | _||_|  ||_| _||_|
+#
+# NUMBER
+# puts OCR.new(big_num).convert
+
+# big_num = <<-NUMBER.chomp
+#     _  _
+#   | _| _|
+#   ||_  _|
+#
+# NUMBER
+# puts OCR.new(big_num).convert
+#
+# num_1213 = <<-NUMBER.chomp
+#     _     _
+#   | _|  | _|
+#   ||_   | _|
+#
+# NUMBER
+# puts OCR.new(num_1213).convert
