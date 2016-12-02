@@ -1,11 +1,14 @@
 require 'minitest/autorun'
 require_relative 'ocr_numbers'
 require "minitest/reporters"
+require 'pry'
+
 Minitest::Reporters.use!
 
 class OCRTest < Minitest::Test
   # rubocop:disable  Style/TrailingWhitespace
   def test_recognize_zero
+    # skip
     text = <<-NUMBER.chomp
  _
 | |
@@ -171,7 +174,7 @@ class OCRTest < Minitest::Test
   end
 
   def test_identify_123_456_789 # rubocop:disable Metrics/MethodLength
-    skip
+    # skip
     text = <<-NUMBER.chomp
     _  _
   | _| _|
