@@ -1,6 +1,6 @@
 # ocr_numbers.rb
 
-module OCR_Strings
+module OCRStrings
   ZERO = <<-NUMBER.chomp
  _
 | |
@@ -73,10 +73,10 @@ module OCR_Strings
 end
 
 class OCR
-  # require 'pry'
-  include OCR_Strings
+  include OCRStrings
 
-  OCR_ARRAY = [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE]
+  OCR_ARRAY = [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT,
+               NINE].freeze
 
   def initialize(input_text)
     @text = input_text
@@ -96,7 +96,8 @@ class OCR
   private
 
   def verify_size
-    raise ArgumentError, "Input text size is wrong!" unless @text.split(//).count("\n") % 3 == 0
+    # binding.pry
+    raise ArgumentError, "Size error" unless (@text.scan("\n").count % 3).zero?
   end
 
   def multiline
@@ -104,7 +105,7 @@ class OCR
   end
 
   def strip_spaces(str)
-    str.sub!("   ","")
+    str.sub!("   ", "")
     3.times { str.sub!("_ \n", "_\n") }
     str
   end
@@ -117,16 +118,8 @@ class OCR
     '?'
   end
 
-  def break_into_single_numbers(str)
-    idx = 0
-    rows_hash = { 0 => [], 1 => [], 2 => [] }
+  def numbers_hash(rows_hash)
     numbers_hash = { 0 => "" }
-
-    str.split(//).each do |e|
-      rows_hash[idx] << " " if rows_hash[idx][-1] == "_" && e == "\n"
-      rows_hash[idx] << e unless e == "\n"
-      idx += 1 if e == "\n"
-    end
 
     0.upto((rows_hash[0].size / 3) - 1) do |number|
       arr = []
@@ -137,6 +130,22 @@ class OCR
       numbers_hash[number] = arr.flatten.join
     end
     numbers_hash
+  end
+
+  def rows_hash(str)
+    idx = 0
+    hash = { 0 => [], 1 => [], 2 => [] }
+
+    str.split(//).each do |e|
+      hash[idx] << " " if hash[idx][-1] == "_" && e == "\n"
+      hash[idx] << e unless e == "\n"
+      idx += 1 if e == "\n"
+    end
+    hash
+  end
+
+  def break_into_single_numbers(str)
+    numbers_hash(rows_hash(str))
   end
 
   def the_numbers(numbers_hash)
