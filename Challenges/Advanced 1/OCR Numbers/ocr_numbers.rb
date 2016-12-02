@@ -96,7 +96,6 @@ class OCR
   private
 
   def verify_size
-    # binding.pry
     raise ArgumentError, "Size error" unless (@text.scan("\n").count % 3).zero?
   end
 
